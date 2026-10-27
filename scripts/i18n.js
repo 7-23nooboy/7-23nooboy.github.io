@@ -9,7 +9,10 @@
   };
 
   register(".skip-link", "跳转到正文");
-  register(".wordmark", "汪元喆 · Yuanzhe Wang", "aria-label");
+  register(".wordmark", "汪元喆");
+  register(".wordmark", "汪元喆，返回顶部", "aria-label");
+  register("#intro-title", "汪元喆");
+  register("[data-owner-name]", "汪元喆");
   register("#main-nav", "主导航", "aria-label");
   register(".language-switch", "语言", "aria-label");
   register(".nav-link[href='#about']", "关于");
@@ -17,7 +20,6 @@
   register(".nav-link[href='#experience']", "科研实习");
   register(".nav-link[href='#education']", "教育背景");
   register(".nav-link[href='#projects']", "项目");
-  register(".nav-contact", "联系");
   register(".intro-eyebrow", "中国科学院计算技术研究所 · 硕士研究生");
   register(".intro-location", "中国 · 北京");
   register(".profile-affiliation", "中国科学院计算技术研究所<br>中国科学院大学", "html");
@@ -33,7 +35,8 @@
   register(".research-note li:nth-child(2)", "后训练算法");
   register(".research-note li:nth-child(3)", "长程智能体数据构建");
   register(".social-links", "个人链接", "aria-label");
-  register(".social-link[data-email-link]", "邮箱");
+  register(".email-trigger", "邮箱");
+  register(".email-panel", "邮箱地址", "aria-label");
   register("[data-social=scholar]", "谷歌学术");
   register("[data-social=cv]", "简历");
   register("#publications .section-index", "研究成果");
@@ -104,11 +107,6 @@
   register(".education-item:nth-child(2) .text-link", "中国科学技术大学");
   register("#projects .section-index", "开源项目");
   register("#projects-title", "项目");
-  register("#contact .section-index", "联系交流");
-  register("#contact-title", "联系方式");
-  register("#contact > div:first-child > p:last-child", "欢迎就研究问题与合作机会联系交流。");
-  register(".copy-email", "复制邮箱地址", "aria-label");
-  register(".copy-email", "复制邮箱地址", "title");
   register(".site-footer > a", "返回顶部");
   register(".close-dialog", "关闭图片", "aria-label");
   register(".close-dialog", "关闭图片", "title");
@@ -129,8 +127,8 @@
   register("meta[property='og:description']", "汪元喆的学术主页：大语言模型训练中的数据科学、后训练算法与长程智能体。中国科学院计算技术研究所硕士研究生。", "content");
 
   const messages = {
-    en: { pageTitle: "Yuanzhe Wang | Personal Homepage", openMenu: "Open navigation", closeMenu: "Close navigation", copied: "Email copied!", copyFailed: "Could not copy. You can select the address instead.", results: "Showing {count} publications.", viewProject: "View project" },
-    zh: { pageTitle: "汪元喆 | 个人主页", openMenu: "展开导航", closeMenu: "收起导航", copied: "邮箱已复制", copyFailed: "复制失败，请选中邮箱地址手动复制。", results: "当前显示 {count} 项研究成果。", viewProject: "查看项目" }
+    en: { pageTitle: "Yuanzhe Wang | Personal Homepage", openMenu: "Open navigation", closeMenu: "Close navigation", copyEmail: "Copy {email}", copied: "Email copied!", copyFailed: "Could not copy. You can select the address instead.", results: "Showing {count} publications.", viewProject: "View project" },
+    zh: { pageTitle: "汪元喆 | 个人主页", openMenu: "展开导航", closeMenu: "收起导航", copyEmail: "复制 {email}", copied: "邮箱已复制", copyFailed: "复制失败，请选中邮箱地址手动复制。", results: "当前显示 {count} 项研究成果。", viewProject: "查看项目" }
   };
   let language = "en";
   const translate = (key, values = {}) => {

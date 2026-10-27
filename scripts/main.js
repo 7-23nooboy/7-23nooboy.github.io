@@ -20,14 +20,153 @@
     if (url) link.href = url;
     else link.removeAttribute("href");
   });
-  if (typeof config.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.email)) {
-    document.querySelectorAll("[data-email-link]").forEach((link) => {
-      link.href = `mailto:${config.email}`;
+  const emailDropdown = document.querySelector(".email-dropdown");
+  const emailTrigger = document.querySelector(".email-trigger");
+  const emailPanel = document.querySelector(".email-panel");
+  let emailPinned = false;
+  let copyingWithSelection = false;
+  const setEmailOpen = (open) => {
+    emailPanel.hidden = !open;
+    emailTrigger.setAttribute("aria-expanded", String(open));
+  };
+  const closeEmails = (restoreFocus = false) => {
+    if (restoreFocus && emailPanel.contains(document.activeElement)) emailTrigger.focus({ preventScroll: true });
+    emailPinned = false;
+    setEmailOpen(false);
+  };
+  emailDropdown.addEventListener("pointerenter", (event) => {
+    if (event.pointerType !== "touch") setEmailOpen(true);
+  });
+  emailDropdown.addEventListener("pointerleave", () => {
+    if (!emailPinned && !emailPanel.contains(document.activeElement)) setEmailOpen(false);
+  });
+  emailTrigger.addEventListener("click", () => {
+    emailPinned = !emailPinned;
+    setEmailOpen(emailPinned);
+  });
+  emailDropdown.addEventListener("focusin", () => setEmailOpen(true));
+  emailDropdown.addEventListener("focusout", (event) => {
+    if (!copyingWithSelection && event.relatedTarget && !emailDropdown.contains(event.relatedTarget)) closeEmails();
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (!emailDropdown.contains(event.target)) closeEmails();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !emailPanel.hidden) {
+      event.preventDefault();
+      closeEmails(true);
+    }
+  });
+
+  const copyAddress = async (address) => {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(address);
+        return;
+      } catch {}
+    }
+    if (typeof document.execCommand !== "function") throw new Error("Clipboard unavailable");
+    const previousFocus = document.activeElement;
+    const selection = globalThis.getSelection();
+    const ranges = selection ? Array.from({ length: selection.rangeCount }, (_, index) => selection.getRangeAt(index).cloneRange()) : [];
+    const buffer = document.createElement("textarea");
+    buffer.className = "clipboard-buffer";
+    buffer.value = address;
+    buffer.readOnly = true;
+    buffer.tabIndex = -1;
+    copyingWithSelection = true;
+    try {
+      document.body.append(buffer);
+      buffer.focus({ preventScroll: true });
+      buffer.select();
+      if (!document.execCommand("copy")) throw new Error("Copy was denied");
+    } finally {
+      buffer.remove();
+      previousFocus?.focus({ preventScroll: true });
+      if (selection) {
+        selection.removeAllRanges();
+        ranges.forEach((range) => selection.addRange(range));
+      }
+      copyingWithSelection = false;
+    }
+  };
+
+  const knownEmails = new Set();
+  const emails = (Array.isArray(config.emails) ? config.emails : []).filter((entry) => {
+    if (!entry || typeof entry.address !== "string") return false;
+    const address = entry.address.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address) || knownEmails.has(address.toLowerCase())) return false;
+    knownEmails.add(address.toLowerCase());
+    return true;
+  });
+  const emailRows = [];
+  const updateEmailRow = ({ button, status }) => {
+    const label = translate("copyEmail", { email: button.dataset.copyEmail });
+    button.setAttribute("aria-label", label);
+    button.title = label;
+    status.textContent = status.dataset.message ? translate(status.dataset.message) : "";
+    button.classList.toggle("is-copied", status.dataset.message === "copied");
+  };
+  document.querySelectorAll("[data-email-list]").forEach((list) => {
+    list.replaceChildren();
+    emails.forEach((entry) => {
+      const row = document.createElement("li");
+      row.className = "email-row";
+      const info = document.createElement("div");
+      info.className = "email-info";
+      const label = document.createElement("span");
+      label.className = "email-label";
+      label.textContent = typeof entry.label === "string" ? entry.label : "";
+      const address = document.createElement("span");
+      address.className = "email-address";
+      address.dir = "ltr";
+      address.textContent = entry.address.trim();
+      info.append(label, address);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "icon-button copy-email";
+      button.dataset.copyEmail = address.textContent;
+      for (const [name, className] of [["copy", "copy-glyph"], ["check", "copy-check"]]) {
+        const icon = document.createElement("i");
+        icon.dataset.lucide = name;
+        icon.className = className;
+        icon.setAttribute("aria-hidden", "true");
+        button.append(icon);
+      }
+      const status = document.createElement("span");
+      status.className = "email-copy-status";
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      status.setAttribute("aria-atomic", "true");
+      const state = { button, status };
+      let timeout;
+      button.addEventListener("click", async () => {
+        if (button.getAttribute("aria-disabled") === "true") return;
+        clearTimeout(timeout);
+        button.setAttribute("aria-disabled", "true");
+        button.setAttribute("aria-busy", "true");
+        try {
+          await copyAddress(button.dataset.copyEmail);
+          status.dataset.message = "copied";
+        } catch {
+          status.dataset.message = "copyFailed";
+        } finally {
+          button.removeAttribute("aria-disabled");
+          button.removeAttribute("aria-busy");
+        }
+        updateEmailRow(state);
+        timeout = setTimeout(() => {
+          delete status.dataset.message;
+          updateEmailRow(state);
+        }, 5000);
+      });
+      updateEmailRow(state);
+      emailRows.push(state);
+      row.append(info, button, status);
+      list.append(row);
     });
-    document.querySelectorAll("[data-email-text]").forEach((element) => {
-      element.textContent = config.email;
-    });
-  }
+  });
+  emailDropdown.hidden = emails.length === 0;
 
   const portraitUrl = safeUrl(config.photo, true);
   if (portraitUrl) {
@@ -153,33 +292,11 @@
     });
   }
 
-  const copyButton = document.querySelector(".copy-email");
-  if (navigator.clipboard?.writeText) {
-    copyButton.hidden = false;
-    let copyTimeout;
-    copyButton.addEventListener("click", async () => {
-      const status = document.querySelector("#copy-status");
-      clearTimeout(copyTimeout);
-      try {
-        await navigator.clipboard.writeText(document.querySelector("[data-email-text]").textContent);
-        status.dataset.message = "copied";
-      } catch {
-        status.dataset.message = "copyFailed";
-      }
-      status.textContent = translate(status.dataset.message);
-      copyTimeout = setTimeout(() => {
-        status.textContent = "";
-        delete status.dataset.message;
-      }, 5000);
-    });
-  }
-
   const updateLanguage = () => {
     menuToggle.setAttribute("aria-label", translate(navigation.classList.contains("is-open") ? "closeMenu" : "openMenu"));
     const filterStatus = document.querySelector("#filter-status");
     if (filterStatus.textContent) filterStatus.textContent = translate("results", { count: publications.filter((publication) => !publication.hidden).length });
-    const copyStatus = document.querySelector("#copy-status");
-    if (copyStatus.dataset.message) copyStatus.textContent = translate(copyStatus.dataset.message);
+    emailRows.forEach(updateEmailRow);
     if (dialog.open && activeFigure) {
       dialog.querySelector("#figure-caption").textContent = activeFigure.dataset.caption;
       dialog.querySelector(".dialog-image").alt = activeFigure.querySelector("img").alt;

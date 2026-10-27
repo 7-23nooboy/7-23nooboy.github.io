@@ -20,14 +20,16 @@ function createPage(context, overrides = {}, prepare) {
   return dom.window;
 }
 
-function copyEmail(window) {
+function copyEmail(window, index = 0, parent = "#email-panel") {
   return new Promise((resolveStatus) => {
+    const button = window.document.querySelectorAll(`${parent} .copy-email`)[index];
+    const status = button.closest(".email-row").querySelector(".email-copy-status");
     const observer = new window.MutationObserver(() => {
       observer.disconnect();
       resolveStatus();
     });
-    observer.observe(window.document.querySelector("#copy-status"), { childList: true });
-    window.document.querySelector(".copy-email").click();
+    observer.observe(status, { childList: true });
+    button.click();
   });
 }
 
@@ -59,6 +61,36 @@ test("social profiles render and unset CV and projects stay hidden", (context) =
   assert.match(document.querySelector("[data-portrait]").src, /assets\/images\/portrait\.webp$/);
 });
 
+test("contact details remain only in About without a redundant Contact section or link", (context) => {
+  const { document } = createPage(context);
+  for (const language of ["en", "zh"]) {
+    document.querySelector(`[data-language=${language}]`).click();
+    assert.equal(document.querySelector("#contact"), null);
+    assert.equal(document.querySelector("a[href='#contact']"), null);
+    assert.equal(document.querySelectorAll("[data-email-list]").length, 1);
+    assert.equal(document.querySelectorAll("#about .copy-email").length, 3);
+  }
+});
+
+test("pixel decorations are separated into the header and footer without interactive roles", (context) => {
+  const { document } = createPage(context);
+  const dog = document.querySelector(".site-header .header-dog");
+  const cat = document.querySelector(".site-footer .footer-cat");
+  for (const [decoration, name] of [[dog, "dog-peek"], [cat, "cat-walk"]]) {
+    assert.ok(decoration);
+    assert.equal(decoration.getAttribute("aria-hidden"), "true");
+    assert.equal(decoration.querySelector("img").getAttribute("src"), `assets/images/pixel-${name}.png`);
+    assert.equal(decoration.querySelector("img").alt, "");
+    assert.equal(decoration.querySelector("button, a"), null);
+  }
+  assert.equal(document.querySelectorAll("img[src$='pixel-dog-peek.png']").length, 1);
+  assert.equal(dog.querySelector(".dog-playful").getAttribute("src"), "assets/images/pixel-dog-tongue.png");
+  assert.equal(document.querySelectorAll("img[src$='pixel-cat-walk.png']").length, 1);
+  assert.ok(cat.querySelector(".cat-walker .cat-facing img"));
+  assert.equal(cat.querySelector(".cat-walker > .cat-front").getAttribute("src"), "assets/images/pixel-cat-front.png");
+  assert.equal(cat.querySelector(".cat-facing .cat-front"), null);
+});
+
 test("an unset photo keeps the initials placeholder without requesting an image", (context) => {
   const { document } = createPage(context, { photo: "" });
   assert.equal(document.querySelector("[data-portrait]").hasAttribute("src"), false);
@@ -79,7 +111,7 @@ test("language switch translates core sections and restores English without chan
   document.querySelector("[data-language=en]").click();
   assert.equal(document.querySelector("#education-title").textContent, "Education");
   assert.match(document.querySelector(".bio").textContent, /master's student/);
-  assert.equal(document.querySelector(".nav-contact").querySelectorAll("i").length, 1);
+  assert.equal(document.querySelector(".email-trigger").querySelectorAll("i").length, 2);
 });
 
 test("biography preserves the advisor, contribution scope, and current interests across language switches", (context) => {
@@ -115,6 +147,20 @@ test("saved Chinese preference is restored and Chinese text is valid Unicode", (
   assert.ok(!window.document.body.textContent.includes("\ufffd"));
 });
 
+test("personal display names follow the selected language while paper author names remain unchanged", (context) => {
+  const { document } = createPage(context);
+  for (const language of ["zh", "en", "zh"]) {
+    document.querySelector(`[data-language=${language}]`).click();
+    const expected = language === "zh" ? "汪元喆" : "Yuanzhe Wang";
+    for (const selector of [".wordmark", "#intro-title", "[data-owner-name]"]) {
+      assert.equal(document.querySelector(selector).textContent, expected);
+    }
+    assert.match(document.querySelector(".wordmark").getAttribute("aria-label"), new RegExp(expected));
+    assert.equal(document.querySelector("#wavecc .authors strong").textContent, "Yuanzhe Wang");
+    assert.ok(document.querySelector(".header-brand .wordmark + .header-dog"));
+  }
+});
+
 test("switching languages preserves filters and translates dynamic status messages", async (context) => {
   const window = createPage(context, {}, (browser) => {
     Object.defineProperty(browser.navigator, "clipboard", { value: { writeText: async () => {} } });
@@ -126,9 +172,9 @@ test("switching languages preserves filters and translates dynamic status messag
   assert.equal(document.querySelector(".menu-toggle").getAttribute("aria-label"), "展开导航");
   assert.equal(document.querySelector("[data-filter=systems]").getAttribute("aria-pressed"), "true");
   await copyEmail(window);
-  assert.equal(document.querySelector("#copy-status").textContent, "邮箱已复制");
+  assert.equal(document.querySelector("#email-panel .email-copy-status").textContent, "邮箱已复制");
   document.querySelector("[data-language=en]").click();
-  assert.equal(document.querySelector("#copy-status").textContent, "Email copied!");
+  assert.equal(document.querySelector("#email-panel .email-copy-status").textContent, "Email copied!");
 });
 
 test("Chinese project metadata is optional and localized when supplied", (context) => {
@@ -221,8 +267,8 @@ test("copy email succeeds using the configured address", async (context) => {
     Object.defineProperty(browser.navigator, "clipboard", { value: { writeText: async (text) => { copied = text; } } });
   });
   await copyEmail(window);
-  assert.equal(copied, window.SITE_CONFIG.email);
-  assert.equal(window.document.querySelector("#copy-status").textContent, "Email copied!");
+  assert.equal(copied, window.SITE_CONFIG.emails[0].address);
+  assert.equal(window.document.querySelector("#email-panel .email-copy-status").textContent, "Email copied!");
 });
 
 test("copy failure produces an accessible recovery message", async (context) => {
@@ -230,5 +276,100 @@ test("copy failure produces an accessible recovery message", async (context) => 
     Object.defineProperty(browser.navigator, "clipboard", { value: { writeText: async () => { throw new Error("denied"); } } });
   });
   await copyEmail(window);
-  assert.match(window.document.querySelector("#copy-status").textContent, /select the address/);
+  assert.match(window.document.querySelector("#email-panel .email-copy-status").textContent, /select the address/);
+});
+
+test("the About email list exposes three plain addresses with independently labelled copy buttons", (context) => {
+  const { document, SITE_CONFIG } = createPage(context);
+  assert.equal(document.querySelectorAll("a[href^='mailto:']").length, 0);
+  for (const list of document.querySelectorAll("[data-email-list]")) {
+    assert.deepEqual([...list.querySelectorAll(".email-address")].map((element) => element.textContent), Array.from(SITE_CONFIG.emails, (entry) => entry.address));
+    assert.equal(list.querySelectorAll(".copy-email").length, 3);
+    for (const button of list.querySelectorAll(".copy-email")) {
+      assert.equal(button.getAttribute("aria-label"), `Copy ${button.dataset.copyEmail}`);
+    }
+  }
+});
+
+test("email popover supports hover, click, keyboard focus, Escape and outside dismissal", (context) => {
+  const window = createPage(context);
+  const document = window.document;
+  const dropdown = document.querySelector(".email-dropdown");
+  const panel = document.querySelector(".email-panel");
+  const trigger = document.querySelector(".email-trigger");
+  dropdown.dispatchEvent(new window.Event("pointerenter"));
+  assert.equal(panel.hidden, false);
+  assert.equal(trigger.getAttribute("aria-expanded"), "true");
+  dropdown.dispatchEvent(new window.Event("pointerleave"));
+  assert.equal(panel.hidden, true);
+  trigger.click();
+  dropdown.dispatchEvent(new window.Event("pointerleave"));
+  assert.equal(panel.hidden, false);
+  trigger.click();
+  assert.equal(panel.hidden, true);
+  trigger.focus();
+  assert.equal(panel.hidden, false);
+  panel.querySelector(".copy-email").focus();
+  dropdown.dispatchEvent(new window.Event("pointerleave"));
+  assert.equal(panel.hidden, false);
+  dropdown.dispatchEvent(new window.FocusEvent("focusout", { relatedTarget: null }));
+  assert.equal(panel.hidden, false);
+  document.dispatchEvent(new window.KeyboardEvent("keydown", { key: "Escape" }));
+  assert.equal(panel.hidden, true);
+  assert.equal(document.activeElement, trigger);
+  trigger.click();
+  document.body.dispatchEvent(new window.Event("pointerdown", { bubbles: true }));
+  assert.equal(panel.hidden, true);
+  trigger.click();
+  document.querySelector("[data-social=github]").focus();
+  assert.equal(panel.hidden, true);
+});
+
+test("every email copies its own address without overwriting another row", async (context) => {
+  const copied = [];
+  const window = createPage(context, {}, (browser) => {
+    Object.defineProperty(browser.navigator, "clipboard", { value: { writeText: async (text) => { copied.push(text); } } });
+  });
+  for (const parent of ["#email-panel"]) {
+    for (let index = 0; index < 3; index++) {
+      await copyEmail(window, index, parent);
+      assert.equal(copied.at(-1), window.SITE_CONFIG.emails[index].address);
+      assert.equal(window.document.querySelectorAll(`${parent} .email-copy-status`)[index].textContent, "Email copied!");
+    }
+  }
+  window.document.querySelector("[data-language=zh]").click();
+  for (const button of window.document.querySelectorAll(".copy-email")) {
+    assert.equal(button.getAttribute("aria-label"), `复制 ${button.dataset.copyEmail}`);
+    assert.equal(button.closest(".email-row").querySelector(".email-copy-status").textContent, "邮箱已复制");
+  }
+});
+
+test("clipboard fallback copies the selected address, restores focus, and keeps the popover open", async (context) => {
+  let copied;
+  const window = createPage(context, {}, (browser) => {
+    browser.document.execCommand = (command) => {
+      assert.equal(command, "copy");
+      copied = browser.document.activeElement.value;
+      return true;
+    };
+  });
+  const button = window.document.querySelectorAll("#email-panel .copy-email")[1];
+  window.document.querySelector(".email-trigger").click();
+  button.focus();
+  await copyEmail(window, 1, "#email-panel");
+  assert.equal(copied, "wyuanooboyzhe@gmail.com");
+  assert.equal(window.document.activeElement, button);
+  assert.equal(window.document.querySelector(".email-panel").hidden, false);
+  assert.equal(window.document.querySelector(".clipboard-buffer"), null);
+});
+
+test("invalid and duplicate email entries are excluded and labels are text-safe", (context) => {
+  const { document } = createPage(context, { emails: [
+    { label: "<img src=x>", address: "test@example.com" },
+    { label: "duplicate", address: "test@example.com" },
+    { label: "invalid", address: "javascript:alert(1)" }
+  ] });
+  assert.equal(document.querySelectorAll("#email-panel .email-row").length, 1);
+  assert.equal(document.querySelector("#email-panel .email-label").textContent, "<img src=x>");
+  assert.equal(document.querySelector("#email-panel .email-label img"), null);
 });

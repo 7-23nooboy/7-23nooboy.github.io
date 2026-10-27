@@ -8,7 +8,7 @@ async function main() {
   const { data, info } = await sharp(source).autoOrient().toBuffer({ resolveWithObject: true });
   const cropWidth = Math.round(info.width * 0.60);
   const crop = {
-    left: Math.round(info.width * 0.20),
+    left: Math.round(info.width * 0.15),
     top: Math.round(info.height * 0.12),
     width: cropWidth,
     height: Math.round(cropWidth * 6 / 5)

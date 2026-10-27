@@ -10,7 +10,11 @@ runInNewContext(readFileSync(resolve(__dirname, "../site.config.js"), "utf8"), c
 const config = context.SITE_CONFIG;
 
 test("verified contact details are available", () => {
-  assert.equal(config.email, "wangyuanzhe@mail.ustc.edu.cn");
+  assert.deepEqual(Array.from(config.emails, (entry) => entry.address), [
+    "wangyuanzhe@mail.ustc.edu.cn",
+    "wyuanooboyzhe@gmail.com",
+    "wangyuanzhe25@mails.ucas.ac.cn"
+  ]);
   assert.equal(new URL(config.github).hostname, "github.com");
 });
 

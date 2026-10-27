@@ -11,7 +11,11 @@ const palette = {
   "p": [195, 131, 121, 255],
   "k": [49, 56, 49, 255],
   "b": [187, 153, 124, 255],
-  "d": [139, 111, 90, 255]
+  "d": [139, 111, 90, 255],
+  "c": [166, 181, 201, 255],
+  "s": [115, 132, 156, 255],
+  "l": [215, 225, 235, 255],
+  "r": [208, 103, 128, 255]
 };
 
 const sprites = {
@@ -61,13 +65,13 @@ const sprites = {
   ]
 };
 
-async function generateSprite(name, rows) {
+async function generateSprite(name, rows, colors = palette) {
   const width = Math.max(...rows.map((row) => row.length));
   const height = rows.length;
   const pixels = Buffer.alloc(width * height * 4);
   rows.forEach((row, rowIndex) => {
     [...row].forEach((character, columnIndex) => {
-      const color = palette[character];
+      const color = colors[character];
       if (!color) throw new Error(`Unknown pixel color: ${character}`);
       pixels.set(color, (rowIndex * width + columnIndex) * 4);
     });
@@ -82,8 +86,86 @@ async function generateSprite(name, rows) {
   console.log(`Generated pixel-${name}.png (${metadata.width} x ${metadata.height})`);
 }
 
+function composePixels(width, height, layers) {
+  const pixels = Array.from({ length: height }, () => Array(width).fill("."));
+  for (const [left, top, rows] of layers) {
+    rows.forEach((row, rowIndex) => {
+      [...row].forEach((color, columnIndex) => {
+        if (color === ".") return;
+        const pixelX = left + columnIndex;
+        const pixelY = top + rowIndex;
+        if (!palette[color] || pixelX < 0 || pixelX >= width || pixelY < 0 || pixelY >= height) {
+          throw new Error("Invalid mascot pixel or layer bounds");
+        }
+        pixels[pixelY][pixelX] = color;
+      });
+    });
+  }
+  return pixels.map((row) => row.join(""));
+}
+
+async function generateWalkingCat() {
+  const catPalette = {
+    ...palette,
+    "#": [99, 72, 56, 255],
+    "c": [232, 165, 83, 255],
+    "s": [192, 120, 59, 255],
+    "l": [249, 207, 144, 255],
+    "w": [255, 247, 229, 255],
+    "p": [224, 138, 139, 255]
+  };
+  const body = [
+    ".....########", "...##ccsccscc##", "..#cccllsllcccc#",
+    ".#cccllsllsccccs#", "#ccccllllllcccss#", "#ccccllllllccsss#",
+    "#cccclllwwwccsss#", ".#cccwwwwwwcss#", "..##cwwwwwcss#", "...##########"
+  ];
+  const head = [
+    ".##......##", "#cc#....#cc#", "#cpc####cpc#", "#cccssscccc#",
+    ".#clllllccc#", "#clllllccccc#", "#cllllkkcccc#", "#cllllwkcccww#",
+    ".#clllccwwwwpk", "..#ccccwwww##", "...##wwww##", ".....####"
+  ];
+  const tail = [".###", "#sss#", "#scc#", ".#cc#", "..#cc#", "...#cc##", "....#ccc###", ".....##ccc#", ".......###"];
+  const steps = [
+    [[8, 24, ["#ss#", "#cc#", "#ww#", "####"]], [22, 24, ["#cc#", ".#cw#", "..#ww#", "..####"]]],
+    [[10, 24, ["#cc#", "#ww#", "####"]], [21, 24, ["#cc#", "#cc#", "#ww#", "####"]]],
+    [[11, 24, ["#cc#", ".#cw#", "..#ww#", "..####"]], [19, 24, ["#ss#", "#cc#", "#ww#", "####"]]],
+    [[9, 24, ["#cc#", "#cc#", "#ww#", "####"]], [20, 24, ["#cc#", "#ww#", "####"]]]
+  ];
+  const frames = steps.map((legs, frame) => {
+    const lift = frame % 2;
+    return composePixels(32, 32, [[2, 12 - lift, tail], ...legs, [7, 15 - lift, body], [18, 6 - lift, head]]);
+  });
+  await generateSprite("cat-walk", Array.from({ length: 32 }, (_, row) => frames.map((frame) => frame[row]).join("")), catPalette);
+  const frontHead = [
+    ".##........##", "#cc#......#cc#", "#cpc#....#cpc#", "#cppc####cppc#",
+    "#cccsccsccscc#", "#ccllsllsllcc#", "#cllllllllllc#", "#clkkllllkkll#",
+    "#clkwllllwkll#", "#clkkllllkkll#", "#cppwwkkwwppc#", ".#cwwwpwwwwc#",
+    "..#wwkwwkww#", "...##wwww##", ".....####"
+  ];
+  const frontBody = [
+    "....####", "..##cccc##", ".#ccwwwccc#", "#cccwwwwccs#", "#cccwwwwcss#",
+    "#cccwwwwcss#", ".#ccwwwwcs#", "..#cwwwwc#", "..#ww##ww#", "..#ww##ww#", "..########"
+  ];
+  await generateSprite("cat-front", composePixels(32, 32, [[4, 18, tail], [10, 17, frontBody], [9, 4, frontHead]]), catPalette);
+}
+
+async function generatePeekingDog() {
+  const head = [
+    "......########", "....##bbbbbbbb##", "...#ddbbwwbbbbdd#", "..#dddbwwwwbbbddd#",
+    ".#dddblwwwwllbdddd#", ".#dddblwwwwllbdddd#", ".#ddbbkkwwwwkkbbdd#",
+    "..#dbbkwlwwlwkbbd#", "..#bbbkkwwwwkkbbb#", "...#bbwwwwwwwwbb#",
+    "....#wwwwkkwwww#", "....#wwwwkkwwww#", ".....#wwwddwww#", "......##wwww##", "........####"
+  ];
+  const paws = [".####......####", "#wwww#....#wwww#", "#wddw#....#wddw#", ".####......####"];
+  const layers = [[6, 2, head], [8, 19, paws]];
+  await generateSprite("dog-peek", composePixels(32, 24, layers));
+  await generateSprite("dog-tongue", composePixels(32, 24, [...layers, [15, 14, ["#dd#", "#pp#", "#pr#", ".##"]]]));
+}
+
 async function main() {
   for (const [name, rows] of Object.entries(sprites)) await generateSprite(name, rows);
+  await generateWalkingCat();
+  await generatePeekingDog();
   for (const name of ["docatlas", "xl-docbench", "triooo", "wavecc"]) {
     const destination = resolve(images, `${name}-preview.webp`);
     await sharp(resolve(images, `${name}.png`)).resize({ width: 1100, withoutEnlargement: true }).webp({ quality: 87, effort: 5 }).toFile(destination);
