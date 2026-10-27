@@ -1,0 +1,7 @@
+node_modules/
+test-results/
+playwright-report/
+screenshots/
+.work/
+/assets/images/portrait.jpg
+.DS_Store

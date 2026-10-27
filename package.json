@@ -1,0 +1,14 @@
+{
+  "name": "yuanzhe-wang-homepage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Yuanzhe Wang's static academic homepage",
+  "scripts": {
+    "test": "node --test tests/*.test.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "lucide": "^0.468.0",
+    "sharp": "^0.35.5"
+  }
+}
