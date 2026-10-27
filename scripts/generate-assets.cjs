@@ -15,7 +15,9 @@ const palette = {
   "c": [166, 181, 201, 255],
   "s": [115, 132, 156, 255],
   "l": [215, 225, 235, 255],
-  "r": [208, 103, 128, 255]
+  "r": [208, 103, 128, 255],
+  "t": [242, 117, 148, 255],
+  "h": [255, 173, 189, 255]
 };
 
 const sprites = {
@@ -159,7 +161,27 @@ async function generatePeekingDog() {
   const paws = [".####......####", "#wwww#....#wwww#", "#wddw#....#wddw#", ".####......####"];
   const layers = [[6, 2, head], [8, 19, paws]];
   await generateSprite("dog-peek", composePixels(32, 24, layers));
-  await generateSprite("dog-tongue", composePixels(32, 24, [...layers, [15, 14, ["#dd#", "#pp#", "#pr#", ".##"]]]));
+  const tongue = [".kkkk.", "#thtt#", "#ttrt#", "#ttrt#", "#tttt#", ".#tt#.", "..##.."];
+  await generateSprite("dog-tongue", composePixels(32, 24, [...layers, [14, 14, tongue]]));
+  const restingPaw = [".####", "#wwww#", "#wddw#", ".####"];
+  const raisedPaw = [".####.", "#wwww#", "#wpwp#", "#wppw#", ".#ww#.", "..##.."];
+  const smile = ["wwwww", "wkwkw", "wwkww", "wwwww"];
+  const poses = [
+    [25, 5, ["....#bb#", "...#bb#.", "..#bb#..", ".#bb#...", "#bb#....", "#bb#....", ".##....."]],
+    [24, 4, ["...#bb#.", "..#bb#..", "..#bb#..", ".#bb#...", "#bb#....", "#bb#....", ".##....."]],
+    [23, 5, ["..#bb#..", "..#bb#..", "..#bb#..", ".#bb#...", "#bb#....", "#bb#....", ".##....."]],
+    [24, 6, ["...#bb#.", "...#bb#.", "..#bb#..", ".#bb#...", "#bb#....", "#bb#....", ".##....."]]
+  ];
+  const waveFrames = poses.map(([pawLeft, pawTop, arm]) => composePixels(32, 24, [
+    [6, 2, head],
+    [12, 8, ["www", ".k.", "kwk"]],
+    [18, 8, ["www", ".k.", "kwk"]],
+    [14, 14, smile],
+    [8, 19, restingPaw],
+    [21, 12, arm],
+    [pawLeft, pawTop, raisedPaw]
+  ]));
+  await generateSprite("dog-wave", Array.from({ length: 24 }, (_, row) => waveFrames.map((frame) => frame[row]).join("")));
 }
 
 async function main() {

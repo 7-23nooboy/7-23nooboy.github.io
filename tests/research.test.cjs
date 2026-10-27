@@ -34,7 +34,7 @@ test("ICT publications and project are categorized as AI4S accelerator-chip rese
       assert.match(paper.querySelector(".paper-description").textContent, /AI4S/);
       assert.match(paper.querySelector(".paper-description").textContent, language === "zh" ? /芯片/ : /chip/);
     }
-    assert.match(document.querySelector(".research-footnote").textContent, /AI4S/);
+    assert.match(document.querySelector(".lab-research-summary").textContent, /AI4S/);
     assert.match(document.querySelector(".bio").textContent, /AI4S/);
   }
 });
@@ -63,5 +63,34 @@ test("all four papers have distinct local figures and accurate public-resource s
     assert.match(document.querySelector("#wavecc .contribution p").textContent, /BookSim2/);
     assert.equal(document.querySelector("#wavecc .authors strong").textContent, "Yuanzhe Wang");
     assert.ok(document.querySelector("#wavecc .figure-credit a[href='https://creativecommons.org/licenses/by/4.0/']"));
+  }
+});
+
+test("ICT lab research is separate from the two research internships in either language", (context) => {
+  const dom = new JSDOM(readFileSync(resolve(root, "index.html"), "utf8"), { runScripts: "outside-only", url: "https://7-23nooboy.github.io/" });
+  context.after(() => dom.window.close());
+  for (const script of ["site.config.js", "scripts/i18n.js", "scripts/main.js"]) dom.window.eval(readFileSync(resolve(root, script), "utf8"));
+  const document = dom.window.document;
+  for (const language of ["en", "zh", "en"]) {
+    document.querySelector(`[data-language=${language}]`).click();
+    const lab = document.querySelector("#lab-research");
+    const internships = document.querySelector("#experience");
+    assert.equal(lab.parentElement, internships.parentElement);
+    assert.equal(lab.nextElementSibling, internships);
+    assert.equal(internships.contains(lab), false);
+    assert.equal(internships.querySelectorAll(".experience-item").length, 2);
+    assert.match(internships.textContent, /XYZ AI Lab/);
+    assert.match(internships.textContent, language === "zh" ? /微软亚洲研究院/ : /Microsoft Research Asia/);
+    assert.doesNotMatch(internships.textContent, /DPMD|TriOoO|WaveCC|gem5/);
+    assert.doesNotMatch(lab.textContent, /TriOoO|WaveCC/);
+    assert.match(lab.textContent, /gem5/);
+    assert.match(lab.textContent, language === "zh" ? /高性能中心/ : /High-Performance Computing Center/);
+    for (const phrase of language === "zh"
+      ? ["周期精确加速器模拟器开发", "硬件验证工作", "硬件代码", "不同测试激励", "功能正确性", "性能表现"]
+      : ["cycle-accurate accelerator simulator", "hardware verification", "hardware code", "diverse test stimuli", "functional correctness", "performance"]) {
+      assert.ok(lab.textContent.includes(phrase), phrase);
+    }
+    assert.equal(document.querySelector("#lab-research-title").textContent, language === "zh" ? "校内科研 · 中科院计算所" : "Research at ICT, CAS");
+    assert.equal(document.querySelector("#experience-title").textContent, language === "zh" ? "科研实习" : "Research internships");
   }
 });

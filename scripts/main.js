@@ -171,13 +171,18 @@
   const portraitUrl = safeUrl(config.photo, true);
   if (portraitUrl) {
     const portrait = document.querySelector("[data-portrait]");
+    const portraitLink = document.querySelector(".portrait-link");
     const placeholder = document.querySelector(".portrait-placeholder");
     portrait.addEventListener("load", () => {
       portrait.hidden = false;
+      portraitLink.href = portraitUrl;
+      portraitLink.hidden = false;
       placeholder.hidden = true;
     });
     portrait.addEventListener("error", () => {
       portrait.hidden = true;
+      portraitLink.hidden = true;
+      portraitLink.removeAttribute("href");
       placeholder.hidden = false;
     });
     portrait.src = portraitUrl;
@@ -269,6 +274,7 @@
     document.querySelectorAll("[data-lightbox]").forEach((link) => {
       link.addEventListener("click", (event) => {
         event.preventDefault();
+        if (!link.getAttribute("href")) return;
         activeFigure = link;
         const image = dialog.querySelector(".dialog-image");
         image.src = link.href;

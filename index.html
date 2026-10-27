@@ -24,7 +24,7 @@
     <div class="container header-inner">
       <div class="header-brand">
         <a class="wordmark" href="#about" aria-label="Yuanzhe Wang, back to top">Yuanzhe Wang</a>
-        <span class="header-dog" aria-hidden="true"><img class="dog-rest" src="assets/images/pixel-dog-peek.png" alt="" width="96" height="72"><img class="dog-playful" src="assets/images/pixel-dog-tongue.png" alt="" width="96" height="72"></span>
+        <span class="header-dog" aria-hidden="true"><img class="dog-rest" src="assets/images/pixel-dog-peek.png" alt="" width="96" height="72"><span class="dog-greeting"><img class="dog-playful" src="assets/images/pixel-dog-wave.png" alt="" width="384" height="72"></span></span>
       </div>
       <div class="header-tools">
         <div class="language-switch" role="group" aria-label="Language" hidden><button type="button" data-language="en" lang="en" aria-pressed="true">EN</button><button type="button" data-language="zh" lang="zh-CN" aria-pressed="false">&#20013;&#25991;</button></div>
@@ -46,7 +46,7 @@
         <div><h1 id="intro-title">Yuanzhe Wang</h1><p class="chinese-name" lang="zh-CN">&#27754;&#20803;&#21894;</p><p class="profile-affiliation">Institute of Computing Technology, CAS<br>University of Chinese Academy of Sciences</p></div>
         <div class="portrait">
           <div class="portrait-placeholder" role="img" aria-label="Personal photo placeholder: Yuanzhe Wang's initials"><span>YW</span></div>
-          <img data-portrait alt="Portrait of Yuanzhe Wang" width="210" height="252" hidden>
+          <a class="portrait-link" data-lightbox data-caption="Yuanzhe Wang" aria-label="Enlarge personal photo" title="Enlarge personal photo" hidden><img data-portrait alt="Portrait of Yuanzhe Wang" width="210" height="252" hidden></a>
         </div>
       </div>
       <div class="intro-body">
@@ -143,6 +143,10 @@
         <p class="author-note" data-author-note>* Equal contribution. Selected work from my research internships and work at ICT, CAS.</p>
       </div>
     </section>
+    <section class="section lab-research-section container" id="lab-research" aria-labelledby="lab-research-title">
+      <div class="section-heading"><div><p class="section-index">LAB RESEARCH</p><h2 id="lab-research-title">Research at ICT, CAS</h2></div></div>
+      <div class="lab-research-summary"><i data-lucide="cpu" aria-hidden="true"></i><p><strong>AI for Science (AI4S) Accelerator Chips</strong><span>Jul 2025 &ndash; present</span><br>In the DPMD project at the High-Performance Computing Center, ICT, CAS, I contribute to the development of a <strong>gem5-based cycle-accurate accelerator simulator</strong>, covering atom memory, processing-element arrays, and packet-switched routers. I also undertake <strong>hardware verification</strong>, verifying the functional correctness and performance of hardware code under diverse test stimuli.</p></div>
+    </section>
     <section class="section experience-section container" id="experience" aria-labelledby="experience-title">
       <div class="section-heading"><div><p class="section-index">EXPERIENCE</p><h2 id="experience-title">Research internships</h2></div></div>
       <div class="experience-list">
@@ -155,7 +159,6 @@
           <p class="experience-summary">Teaching agents to navigate long documents and ground their answers in evidence.</p><ul class="experience-points"><li>Core contributor to <a href="#publications">DocAtlas and XL-DocBench</a>, both NeurIPS 2026 Posters.</li><li>Built a STEM PDF-to-QA pipeline: document trees, evidence-backed extraction, and rule-based / LLM-judge verification for reinforcement learning data.</li></ul><div class="tags"><span>Document understanding</span><span>Agent RL</span><span>Data curation</span></div>
         </div></article>
       </div>
-      <div class="research-footnote"><i data-lucide="cpu" aria-hidden="true"></i><p><strong>ICT, CAS · AI for Science (AI4S) Accelerator Chips</strong><span>Jul 2025 &ndash; present</span><br>Contributing to DPMD research on accelerator chips for molecular-dynamics computation, including TriOoO, WaveCC, and a gem5-based cycle-accurate simulator covering atom memory, processing-element arrays, and packet-switched routers.</p></div>
     </section>
     <section class="section education-section" id="education" aria-labelledby="education-title">
       <div class="container">

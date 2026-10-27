@@ -26,9 +26,11 @@ h3 { font-size: 23px; line-height: 1.4; font-weight: 500; }
 .header-brand { display: flex; align-items: center; align-self: stretch; min-height: 70px; gap: 10px; margin-right: auto; flex-shrink: 0; }
 .header-dog { position: relative; display: block; align-self: flex-end; width: 64px; height: 44px; flex-shrink: 0; }
 .header-dog img { position: absolute; left: 0; bottom: -2px; width: 64px; height: 48px; max-width: none; image-rendering: pixelated; pointer-events: none; transition: opacity 100ms steps(2, end); }
-.dog-playful { opacity: 0; }
+.dog-greeting { position: absolute; left: 0; bottom: -2px; width: 100%; height: 48px; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity 100ms steps(2, end); }
+.header-dog .dog-playful { position: static; width: 400%; height: 100%; transition: none; }
 .header-dog:hover .dog-rest { opacity: 0; }
-.header-dog:hover .dog-playful { opacity: 1; }
+.header-dog:hover .dog-greeting { opacity: 1; }
+.header-dog:hover .dog-playful { animation: dog-wave 800ms steps(4, end) infinite; }
 .wordmark { font-family: var(--body-font); font-size: 22px; font-weight: 600; white-space: nowrap; padding-top: 14px; }
 .header-tools { order: 3; display: flex; align-items: center; gap: 14px; padding-top: 14px; }
 .language-switch { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 4px; padding: 2px; gap: 2px; }
@@ -52,7 +54,8 @@ h1 { font-size: 52px; line-height: 1.2; font-weight: 500; }
 html[lang="zh-CN"] .chinese-name { display: none; }
 .profile-affiliation { margin-top: 15px; font-size: 13px; line-height: 1.8; color: var(--muted); }
 .portrait { position: relative; width: 210px; height: 252px; flex-shrink: 0; margin-right: 18px; }
-.portrait > img, .portrait-placeholder { width: 100%; height: 100%; border: 1px solid var(--line); border-radius: 3px; object-fit: cover; background: var(--mint); }
+.portrait-link { display: block; position: relative; width: 100%; height: 100%; cursor: zoom-in; }
+.portrait-link [data-portrait], .portrait-placeholder { width: 100%; height: 100%; border: 1px solid var(--line); border-radius: 3px; object-fit: cover; background: var(--mint); }
 .portrait-placeholder { display: grid; place-items: center; background: linear-gradient(145deg, #f7f7f7, #ededed); }
 .portrait-placeholder span { font-family: var(--display-font); font-size: 37px; font-weight: 400; color: #8b8e93; }
 .intro-body { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 65px; margin-top: 28px; align-items: center; }
@@ -189,10 +192,11 @@ html[lang="zh-CN"] .chinese-name { display: none; }
 .experience-points a { text-decoration: underline; text-decoration-color: #c3ced7; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .tags span { font-size: 9px; background: #f1f3f5; color: #56636e; padding: 4px 8px; border-radius: 2px; }
-.research-footnote { display: flex; gap: 16px; border-top: 1px solid var(--line); margin-top: 40px; padding-top: 22px; color: var(--muted); font-size: 12px; }
-.research-footnote > svg { margin-top: 4px; color: var(--green); }
-.research-footnote strong { color: var(--ink); font-weight: 500; }
-.research-footnote p > span { font-size: 10px; margin-left: 14px; }
+.lab-research-section { padding-block: 43px; border-bottom: 1px solid var(--line); }
+.lab-research-summary { display: flex; gap: 16px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.lab-research-summary > svg { margin-top: 4px; color: var(--green); }
+.lab-research-summary strong { color: var(--ink); font-weight: 500; }
+.lab-research-summary p > span { display: inline-block; font-size: 11px; margin-left: 14px; }
 .education-section { padding-block: 43px; background: var(--white); border-block: 1px solid var(--line); }
 .education-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px; margin-top: 38px; }
 .education-item { display: flex; gap: 23px; }
@@ -236,6 +240,7 @@ html[lang="zh-CN"] .chinese-name { display: none; }
 @keyframes cat-pace { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(var(--cat-travel)); } }
 @keyframes cat-turn { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(-1); } }
 @keyframes cat-steps { from { transform: translateX(0); } to { transform: translateX(-256px); } }
+@keyframes dog-wave { from { transform: translateX(0); } to { transform: translateX(-100%); } }
 @media (min-width: 1600px) {
   .container { width: min(1120px, calc(100% - 120px)); }
 }
@@ -266,6 +271,7 @@ html[lang="zh-CN"] .chinese-name { display: none; }
   .header-brand { min-height: 65px; gap: 6px; flex: 1 1 0; min-width: 0; }
   .header-dog { width: 48px; height: 33px; }
   .header-dog img { width: 48px; height: 36px; bottom: -1px; }
+  .dog-greeting { height: 36px; bottom: -1px; }
   .header-tools { order: 2; gap: 12px; }
   .language-switch button { min-width: 33px; }
   .js .menu-toggle { display: inline-flex; width: 39px; height: 39px; }
@@ -282,7 +288,7 @@ html[lang="zh-CN"] .chinese-name { display: none; }
   .chinese-name { font-size: 17px; }
   .profile-affiliation { font-size: 11px; margin-top: 11px; }
   .portrait { width: 128px; height: 154px; margin-right: 10px; }
-  .portrait > img, .portrait-placeholder { border-width: 1px; }
+  .portrait-link [data-portrait], .portrait-placeholder { border-width: 1px; }
   .portrait-placeholder span { font-size: 35px; }
   .intro-body { grid-template-columns: 1fr; gap: 26px; margin-top: 24px; }
   .bio { font-size: 14px; }
@@ -319,8 +325,8 @@ html[lang="zh-CN"] .chinese-name { display: none; }
   .role { font-size: 11px; }
   .experience-summary { font-size: 13px; }
   .experience-points { font-size: 12px; }
-  .research-footnote { margin-top: 30px; }
-  .research-footnote p > span { display: inline-block; margin-left: 0; width: 100%; }
+  .lab-research-section { padding-block: 35px; }
+  .lab-research-summary p > span { margin-left: 0; width: 100%; }
   .education-section { padding-block: 42px; }
   .education-grid { grid-template-columns: 1fr; gap: 27px; margin-top: 30px; }
   .education-item { gap: 20px; }
@@ -362,6 +368,7 @@ html[lang="zh-CN"] .chinese-name { display: none; }
   .header-brand { gap: 4px; }
   .header-dog { width: 40px; height: 28px; }
   .header-dog img { width: 40px; height: 30px; }
+  .dog-greeting { height: 30px; }
   h1 { font-size: 33px; }
   .portrait { margin-right: 2px; width: 96px; height: 120px; }
   .portrait-placeholder span { font-size: 29px; }
@@ -382,7 +389,7 @@ html[lang="zh-CN"] .chinese-name { display: none; }
   .language-switch { display: none !important; }
   .site-header, .intro-bottom, .filters, .figure-dialog, .copy-email, .site-footer a { display: none !important; }
   .container { width: 100%; }
-  .intro, .experience-section, .education-section, .research-section { padding-block: 22px; }
+  .intro, .experience-section, .education-section, .research-section, .lab-research-section { padding-block: 22px; }
   .publication { break-inside: avoid; }
   body { background: white; }
   h1 { font-size: 48px; }

@@ -25,6 +25,9 @@
   register(".profile-affiliation", "中国科学院计算技术研究所<br>中国科学院大学", "html");
   register(".portrait-placeholder", "个人照片预留位置：Yuanzhe Wang 姓名缩写", "aria-label");
   register("[data-portrait]", "汪元喆的个人照片", "alt");
+  register(".portrait-link", "放大个人照片", "aria-label");
+  register(".portrait-link", "放大个人照片", "title");
+  register(".portrait-link", "汪元喆", "data-caption");
   register(".intro-lead", "关于我");
   register(".bio p:nth-child(2)", "我目前是<a href='https://www.ict.ac.cn/' target='_blank' rel='noopener noreferrer'>中国科学院计算技术研究所</a>的硕士研究生，就读于中国科学院大学，师从高性能中心的<strong>元国军高级工程师</strong>。此前，我于<a href='https://www.ustc.edu.cn/' target='_blank' rel='noopener noreferrer'>中国科学技术大学</a>获得信息安全专业工学学士学位。", "html");
   register(".bio p:nth-child(3)", "在计算所，我参与<strong>面向分子动力学模拟的 AI4S 计算加速芯片研发</strong>，负责验证工作，并参与部分设计。在此前的科研实习中，我的研究与实践涉及大语言模型智能体框架的设计、搭建与训练，智能体能力评测数据集的构建，以及预训练数据处理与算法研究。", "html");
@@ -72,6 +75,9 @@
   register("#wavecc .contribution p", "基于 BookSim2 和 LAMMPS 收集基线测量结果与包级轨迹，支持评估晶圆级芯片上面向分子动力学负载的信用引导拥塞控制。");
   register("#wavecc .figure-credit > span", "图 7，裁取自");
   register(".author-note", "* 共同贡献。所列成果来自科研实习及在中科院计算所参与的研究工作。");
+  register("#lab-research .section-index", "实验室工作");
+  register("#lab-research-title", "校内科研 · 中科院计算所");
+  register(".lab-research-summary p", "<strong>AI4S 计算加速芯片</strong><span>2025.07 — 至今</span><br>在中科院计算所高性能中心的 DPMD 项目中，我参与<strong>基于 gem5 的周期精确加速器模拟器开发</strong>，覆盖原子存储、处理单元阵列和分组交换路由器等模块。同时承担<strong>硬件验证工作</strong>，负责验证硬件代码在不同测试激励下的功能正确性与性能表现。", "html");
   register("#experience .section-index", "科研经历");
   register("#experience-title", "科研实习");
   register(".experience-item:nth-child(1) .experience-date > span:first-child", "2026.06 — 2026.09");
@@ -93,7 +99,6 @@
   register(".experience-item:nth-child(2) .tags span:nth-child(1)", "文档理解");
   register(".experience-item:nth-child(2) .tags span:nth-child(2)", "智能体强化学习");
   register(".experience-item:nth-child(2) .tags span:nth-child(3)", "数据构建");
-  register(".research-footnote p", "<strong>中科院计算所 · AI4S 计算加速芯片</strong><span>2025.07 — 至今</span><br>参与 DPMD 项目，围绕分子动力学计算开展 AI for Science（AI4S）加速芯片相关研究，包括 TriOoO、WaveCC，以及基于 gem5 的周期精确加速器模拟器，涉及原子存储、处理单元阵列和分组交换路由器。", "html");
   register("#education .section-index", "教育经历");
   register("#education-title", "教育背景");
   register(".education-item:nth-child(1) .education-date", "2025 — 2028 <span>预计</span>", "html");

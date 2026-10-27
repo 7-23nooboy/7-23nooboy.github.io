@@ -48,7 +48,7 @@ photo: "assets/images/portrait.webp",
 
 复制优先使用 Clipboard API，失败或不可用时尝试兼容复制；如果浏览器仍拒绝，会显示手动选择地址的提示。编辑 `emails` 后，也请同步 [index.html](index.html) 中 `noscript` 内的静态邮箱列表，作为禁用 JavaScript 时的可展开后备内容。
 
-像素装饰分置于页眉和页脚：狗狗从页眉姓名旁的分隔线探头，鼠标悬停时吐舌头。页脚使用短身、大头、白爪的橘色虎斑猫，四帧步行动画每 14 秒完成一次往返；鼠标悬停在猫身上时，它会在当前位置停下并转向正面，移开后继续走。活动范围随屏幕宽度缩小，系统开启“减少动态效果”时停止自动移动，但静态装饰和悬停表情仍可见。
+像素装饰分置于页眉和页脚：狗狗从页眉姓名旁的分隔线探头，鼠标悬停时笑着抬爪挥手，移开恢复常态；挥爪每 800 毫秒播放四帧，仅悬停时循环。页脚使用短身、大头、白爪的橘色虎斑猫，四帧步行动画每 14 秒完成一次往返；鼠标悬停在猫身上时，它会在当前位置停下并转向正面，移开后继续走。活动范围随屏幕宽度缩小，系统开启“减少动态效果”时停止自动移动和挥爪循环，但静态抬爪、正面表情仍可见。
 
 将 `cv` 设置为实际 PDF 的相对路径即可显示简历入口。可选社交链接留空会隐藏，不产生占位死链。
 
@@ -109,7 +109,7 @@ node scripts/generate-assets.cjs
 - TriOoO 架构图提取自用户提供的本地参考稿第 6 页 Figure 5，只保留图像区域，不含页眉、审稿行号或正文。参考稿尚未公开，主页不提供 PDF、占位 DOI 或未核实的作者名单；MICRO 2026 Poster 信息沿用用户简历。发布前应确认这张图本身可以公开展示。
 - WaveCC 总览图提取自正式论文第 8 页（印刷页码 1568）的 Figure 7，来源为 Tao Jiang 等人的 [Credit-Guided Congestion Control on Wafer-Scale On-Chip Networks for Molecular Dynamics](https://doi.org/10.1145/3789240.3829210)，SIGCOMM 2026，按 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 使用。对原页面仅做了图像区域裁剪与预览压缩，图下保留来源和许可证。作者顺序依据本地正式论文，并与 [SIGCOMM 官方录用列表](https://conferences.sigcomm.org/sigcomm/2026/accepted/)核对。
 - 原始高清 PNG 保留用于放大查看，页面预览使用生成的 WebP。
-- 像素猫狗由 [scripts/generate-assets.cjs](scripts/generate-assets.cjs) 中的像素矩阵原创生成。猫猫使用 `pixel-cat-walk.png` 中的四个 96 × 96 像素步行帧以及 `pixel-cat-front.png` 正面表情，网页上按 64 × 64 像素显示；狗狗的常态和吐舌表情分别为 `pixel-dog-peek.png` 与 `pixel-dog-tongue.png`。
+- 像素猫狗由 [scripts/generate-assets.cjs](scripts/generate-assets.cjs) 中的像素矩阵原创生成。猫猫使用 `pixel-cat-walk.png` 中的四个 96 × 96 像素步行帧以及 `pixel-cat-front.png` 正面表情，网页上按 64 × 64 像素显示；狗狗的常态和四帧挥爪素材分别为 `pixel-dog-peek.png` 与 `pixel-dog-wave.png`，每帧为 96 × 72 像素。
 - Lucide 图标库已本地化，许可证位于 [assets/vendor/LICENSE](assets/vendor/LICENSE)。
 - Bricolage Grotesque 与 DM Sans 字体已本地化，分别附有 [Bricolage 字体许可证](assets/fonts/bricolage-OFL.txt) 与 [DM Sans 字体许可证](assets/fonts/dm-sans-OFL.txt)。
 

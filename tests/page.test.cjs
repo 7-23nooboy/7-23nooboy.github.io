@@ -84,7 +84,7 @@ test("pixel decorations are separated into the header and footer without interac
     assert.equal(decoration.querySelector("button, a"), null);
   }
   assert.equal(document.querySelectorAll("img[src$='pixel-dog-peek.png']").length, 1);
-  assert.equal(dog.querySelector(".dog-playful").getAttribute("src"), "assets/images/pixel-dog-tongue.png");
+  assert.equal(dog.querySelector(".dog-greeting .dog-playful").getAttribute("src"), "assets/images/pixel-dog-wave.png");
   assert.equal(document.querySelectorAll("img[src$='pixel-cat-walk.png']").length, 1);
   assert.ok(cat.querySelector(".cat-walker .cat-facing img"));
   assert.equal(cat.querySelector(".cat-walker > .cat-front").getAttribute("src"), "assets/images/pixel-cat-front.png");
@@ -218,7 +218,7 @@ test("figure dialog loads the original image and explicitly handles Escape", (co
     dialog.close = () => { dialog.open = false; };
   });
   const document = window.document;
-  document.querySelector("[data-lightbox]").click();
+  document.querySelector("#docatlas [data-lightbox]").click();
   const dialog = document.querySelector("dialog");
   assert.equal(dialog.open, true);
   assert.match(dialog.querySelector("img").src, /docatlas\.png$/);
@@ -251,14 +251,45 @@ test("empty projects and unsafe social URLs never produce clickable placeholders
 test("a personal photo replaces the placeholder only after loading", (context) => {
   const window = createPage(context, { photo: "assets/images/portrait.jpg" });
   const portrait = window.document.querySelector("[data-portrait]");
+  const link = window.document.querySelector(".portrait-link");
   const placeholder = window.document.querySelector(".portrait-placeholder");
   assert.equal(portrait.hidden, true);
+  assert.equal(link.hidden, true);
+  assert.equal(link.hasAttribute("href"), false);
   portrait.dispatchEvent(new window.Event("load"));
   assert.equal(portrait.hidden, false);
+  assert.equal(link.hidden, false);
+  assert.equal(link.href, portrait.src);
   assert.equal(placeholder.hidden, true);
   portrait.dispatchEvent(new window.Event("error"));
   assert.equal(portrait.hidden, true);
+  assert.equal(link.hidden, true);
+  assert.equal(link.hasAttribute("href"), false);
   assert.equal(placeholder.hidden, false);
+});
+
+test("portrait enlargement uses only the configured web image and localized captions", (context) => {
+  const window = createPage(context, {}, (browser) => {
+    const dialog = browser.document.querySelector("dialog");
+    dialog.showModal = () => { dialog.open = true; };
+    dialog.close = () => { dialog.open = false; };
+  });
+  const document = window.document;
+  const link = document.querySelector(".portrait-link");
+  const dialog = document.querySelector("dialog");
+  link.click();
+  assert.equal(dialog.open, false);
+  document.querySelector("[data-portrait]").dispatchEvent(new window.Event("load"));
+  link.click();
+  assert.equal(dialog.open, true);
+  assert.match(dialog.querySelector(".dialog-image").src, /portrait\.webp$/);
+  assert.match(dialog.querySelector(".original-image").href, /portrait\.webp$/);
+  assert.equal(dialog.querySelector("#figure-caption").textContent, "Yuanzhe Wang");
+  document.querySelector("[data-language=zh]").click();
+  assert.equal(dialog.querySelector("#figure-caption").textContent, "汪元喆");
+  assert.equal(link.getAttribute("aria-label"), "放大个人照片");
+  dialog.querySelector(".close-dialog").click();
+  assert.equal(dialog.open, false);
 });
 
 test("copy email succeeds using the configured address", async (context) => {

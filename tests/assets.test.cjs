@@ -46,3 +46,22 @@ test("walking and front-facing cats share orange tabby fur and white markings", 
     assert.ok(!colors.has("166,181,201"), `${name}: no old gray-blue fur`);
   }
 });
+
+test("dog greeting has four distinct raised-paw frames with a stationary resting paw", async () => {
+  const image = readFileSync(resolve(__dirname, "../assets/images/pixel-dog-wave.png"));
+  const metadata = await sharp(image).metadata();
+  assert.equal(metadata.width, 384);
+  assert.equal(metadata.height, 72);
+  assert.equal(metadata.hasAlpha, true);
+  const pawHashes = new Set();
+  const restingPaw = await sharp(resolve(__dirname, "../assets/images/pixel-dog-peek.png"))
+    .extract({ left: 24, top: 57, width: 18, height: 12 }).ensureAlpha().raw().toBuffer();
+  for (let frame = 0; frame < 4; frame++) {
+    const raised = await sharp(image).extract({ left: frame * 96 + 69, top: 12, width: 24, height: 24 }).ensureAlpha().raw().toBuffer();
+    assert.ok(raised.some((value, index) => index % 4 === 3 && value > 0));
+    pawHashes.add(createHash("sha256").update(raised).digest("hex"));
+    const resting = await sharp(image).extract({ left: frame * 96 + 24, top: 57, width: 18, height: 12 }).ensureAlpha().raw().toBuffer();
+    assert.deepEqual(resting, restingPaw);
+  }
+  assert.equal(pawHashes.size, 4);
+});
