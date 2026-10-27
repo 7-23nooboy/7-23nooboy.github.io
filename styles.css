@@ -147,8 +147,8 @@ html[lang="zh-CN"] .chinese-name { display: none; }
 .paper-links svg { width: 14px; height: 14px; }
 .systems-publications { display: grid; gap: 30px; margin-top: 30px; }
 .publication-visual { min-width: 0; }
-.figure-credit { margin-top: 9px; color: var(--muted); font-size: 10px; line-height: 1.6; }
-.figure-credit a { text-decoration: underline; text-decoration-color: #c3ced7; }
+.dialog-credit { margin-top: 9px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.dialog-credit a { text-decoration: underline; text-decoration-color: #c3ced7; }
 .paper-availability { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 8px; }
 .paper-availability svg { width: 15px; height: 15px; }
 .system-paper { display: flex; gap: 24px; padding-block: 23px; border-top: 1px solid var(--line); align-items: center; }

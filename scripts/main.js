@@ -270,6 +270,12 @@
 
   const dialog = document.querySelector(".figure-dialog");
   let activeFigure;
+  const updateFigureCredit = () => {
+    const source = activeFigure?.closest("article")?.querySelector("[data-figure-credit]");
+    const credit = dialog.querySelector(".dialog-credit");
+    credit.replaceChildren(...(source ? [...source.childNodes].map((node) => node.cloneNode(true)) : []));
+    credit.hidden = !source;
+  };
   if (typeof dialog.showModal === "function") {
     document.querySelectorAll("[data-lightbox]").forEach((link) => {
       link.addEventListener("click", (event) => {
@@ -281,6 +287,7 @@
         image.alt = link.querySelector("img").alt;
         dialog.querySelector("#figure-caption").textContent = link.dataset.caption;
         dialog.querySelector(".original-image").href = link.href;
+        updateFigureCredit();
         dialog.showModal();
       });
     });
@@ -306,6 +313,7 @@
     if (dialog.open && activeFigure) {
       dialog.querySelector("#figure-caption").textContent = activeFigure.dataset.caption;
       dialog.querySelector(".dialog-image").alt = activeFigure.querySelector("img").alt;
+      updateFigureCredit();
     }
     document.querySelectorAll(".project-item").forEach((article, index) => {
       const project = projects[index];

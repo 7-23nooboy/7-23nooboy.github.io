@@ -226,6 +226,32 @@ test("figure dialog loads the original image and explicitly handles Escape", (co
   assert.equal(dialog.open, false);
 });
 
+test("image attribution is localized in the lightbox and clears for other images", (context) => {
+  const { document } = createPage(context, {}, (browser) => {
+    const dialog = browser.document.querySelector("dialog");
+    dialog.showModal = () => { dialog.open = true; };
+    dialog.close = () => { dialog.open = false; };
+  });
+  const dialog = document.querySelector("dialog");
+  const credit = dialog.querySelector(".dialog-credit");
+  document.querySelector("#wavecc [data-lightbox]").click();
+  assert.equal(credit.hidden, false);
+  assert.match(credit.textContent, /Jiang et al\. \(2026\)/);
+  assert.match(credit.textContent, /Image cropped from/);
+  assert.ok(credit.querySelector("a[href='https://creativecommons.org/licenses/by/4.0/']"));
+  document.querySelector("[data-language=zh]").click();
+  assert.match(credit.textContent, /图片裁取自/);
+  assert.doesNotMatch(dialog.querySelector("#figure-caption").textContent, /图\s*7/);
+  dialog.close();
+  document.querySelector("#triooo [data-lightbox]").click();
+  assert.equal(credit.hidden, true);
+  assert.equal(credit.childNodes.length, 0);
+  dialog.close();
+  document.querySelector("[data-portrait]").dispatchEvent(new document.defaultView.Event("load"));
+  document.querySelector(".portrait-link").click();
+  assert.equal(credit.hidden, true);
+});
+
 test("projects require both the toggle and valid entries; content is text-safe", (context) => {
   const { document } = createPage(context, {
     showProjects: true,

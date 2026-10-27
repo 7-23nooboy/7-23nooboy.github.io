@@ -107,7 +107,7 @@ node scripts/generate-assets.cjs
 - DocAtlas 框架图来自 [官方项目主页](https://officeintelligence.github.io/docatlas/)，对应原始论文内容。
 - XL-DocBench 流程图来自 [官方项目主页](https://officeintelligence.github.io/xl-docbench/)。
 - TriOoO 架构图提取自用户提供的本地参考稿第 6 页 Figure 5，只保留图像区域，不含页眉、审稿行号或正文。参考稿尚未公开，主页不提供 PDF、占位 DOI 或未核实的作者名单；MICRO 2026 Poster 信息沿用用户简历。发布前应确认这张图本身可以公开展示。
-- WaveCC 总览图提取自正式论文第 8 页（印刷页码 1568）的 Figure 7，来源为 Tao Jiang 等人的 [Credit-Guided Congestion Control on Wafer-Scale On-Chip Networks for Molecular Dynamics](https://doi.org/10.1145/3789240.3829210)，SIGCOMM 2026，按 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 使用。对原页面仅做了图像区域裁剪与预览压缩，图下保留来源和许可证。作者顺序依据本地正式论文，并与 [SIGCOMM 官方录用列表](https://conferences.sigcomm.org/sigcomm/2026/accepted/)核对。
+- WaveCC 总览图提取自正式论文第 8 页（印刷页码 1568）的 Figure 7，来源为 Tao Jiang 等人的 [Credit-Guided Congestion Control on Wafer-Scale On-Chip Networks for Molecular Dynamics](https://doi.org/10.1145/3789240.3829210)，SIGCOMM 2026，按 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 使用。对原页面仅做了图像区域裁剪与预览压缩，来源和许可证保留在点击放大的弹窗中，列表不显示图号或图注。作者顺序依据本地正式论文，并与 [SIGCOMM 官方录用列表](https://conferences.sigcomm.org/sigcomm/2026/accepted/)核对。
 - 原始高清 PNG 保留用于放大查看，页面预览使用生成的 WebP。
 - 像素猫狗由 [scripts/generate-assets.cjs](scripts/generate-assets.cjs) 中的像素矩阵原创生成。猫猫使用 `pixel-cat-walk.png` 中的四个 96 × 96 像素步行帧以及 `pixel-cat-front.png` 正面表情，网页上按 64 × 64 像素显示；狗狗的常态和四帧挥爪素材分别为 `pixel-dog-peek.png` 与 `pixel-dog-wave.png`，每帧为 96 × 72 像素。
 - Lucide 图标库已本地化，许可证位于 [assets/vendor/LICENSE](assets/vendor/LICENSE)。

@@ -62,11 +62,16 @@ test("all four papers have distinct local figures and accurate public-resource s
     assert.match(document.querySelector("#triooo .contribution p").textContent, language === "zh" ? /验证数据集/ : /validation datasets/);
     assert.match(document.querySelector("#wavecc .contribution p").textContent, /BookSim2/);
     assert.equal(document.querySelector("#wavecc .authors strong").textContent, "Yuanzhe Wang");
-    assert.ok(document.querySelector("#wavecc .figure-credit a[href='https://creativecommons.org/licenses/by/4.0/']"));
+    assert.ok(document.querySelector("#wavecc [data-figure-credit] a[href='https://creativecommons.org/licenses/by/4.0/']"));
+    assert.equal(document.querySelector("#wavecc [data-figure-credit]").hidden, true);
+    assert.equal(document.querySelector("#publications .figure-credit"), null);
+    for (const name of ["triooo", "wavecc"]) {
+      assert.doesNotMatch(document.querySelector(`#${name} [data-lightbox]`).dataset.caption, /Figure\s*[57]|图\s*[57]/);
+    }
   }
 });
 
-test("ICT lab research is separate from the two research internships in either language", (context) => {
+test("ICT lab projects are labelled as engineering and separate from research internships in either language", (context) => {
   const dom = new JSDOM(readFileSync(resolve(root, "index.html"), "utf8"), { runScripts: "outside-only", url: "https://7-23nooboy.github.io/" });
   context.after(() => dom.window.close());
   for (const script of ["site.config.js", "scripts/i18n.js", "scripts/main.js"]) dom.window.eval(readFileSync(resolve(root, script), "utf8"));
@@ -90,7 +95,8 @@ test("ICT lab research is separate from the two research internships in either l
       : ["cycle-accurate accelerator simulator", "hardware verification", "hardware code", "diverse test stimuli", "functional correctness", "performance"]) {
       assert.ok(lab.textContent.includes(phrase), phrase);
     }
-    assert.equal(document.querySelector("#lab-research-title").textContent, language === "zh" ? "校内科研 · 中科院计算所" : "Research at ICT, CAS");
+    assert.equal(document.querySelector("#lab-research-title").textContent, language === "zh" ? "实验室项目 · 中科院计算所" : "Lab Projects at ICT, CAS");
+    assert.equal(lab.querySelector(".section-index").textContent, language === "zh" ? "工程实践" : "ENGINEERING");
     assert.equal(document.querySelector("#experience-title").textContent, language === "zh" ? "科研实习" : "Research internships");
   }
 });

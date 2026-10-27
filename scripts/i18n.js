@@ -69,14 +69,13 @@
   register("#triooo .paper-description", "面向机器学习分子动力学的可扩展 AI4S 加速芯片框架，结合可复用计算模块、分层查找表存储与三级乱序调度。");
   register("#triooo .contribution p", "构建分子动力学优化策略的验证数据集，并参与 NNMD 加速器框架中的多项式优化实现。");
   register("#triooo .paper-availability span", "论文尚未公开。");
-  register("#triooo .figure-credit", "图 5，提取自参考稿。");
   register("#wavecc .paper-subtitle", "面向分子动力学的晶圆级片上网络信用引导拥塞控制");
   register("#wavecc .paper-description", "面向晶圆级 AI4S 芯片上分子动力学负载的信用引导拥塞控制。WaveCC 利用路由器信用反馈，动态调节通信步长与各处理单元的注入速率，无需修改路由器微架构。");
   register("#wavecc .contribution p", "基于 BookSim2 和 LAMMPS 收集基线测量结果与包级轨迹，支持评估晶圆级芯片上面向分子动力学负载的信用引导拥塞控制。");
-  register("#wavecc .figure-credit > span", "图 7，裁取自");
+  register("#wavecc [data-figure-credit] > span", "图片裁取自");
   register(".author-note", "* 共同贡献。所列成果来自科研实习及在中科院计算所参与的研究工作。");
-  register("#lab-research .section-index", "实验室工作");
-  register("#lab-research-title", "校内科研 · 中科院计算所");
+  register("#lab-research .section-index", "工程实践");
+  register("#lab-research-title", "实验室项目 · 中科院计算所");
   register(".lab-research-summary p", "<strong>AI4S 计算加速芯片</strong><span>2025.07 — 至今</span><br>在中科院计算所高性能中心的 DPMD 项目中，我参与<strong>基于 gem5 的周期精确加速器模拟器开发</strong>，覆盖原子存储、处理单元阵列和分组交换路由器等模块。同时承担<strong>硬件验证工作</strong>，负责验证硬件代码在不同测试激励下的功能正确性与性能表现。", "html");
   register("#experience .section-index", "科研经历");
   register("#experience-title", "科研实习");
@@ -122,8 +121,8 @@
   register("#xl-docbench [data-lightbox]", "放大 XL-DocBench 构建流程图", "aria-label");
   register("#docatlas .publication-image img", "DocAtlas 框架：智能体搜索与阅读文档树，记录有据可循的笔记并回顾记忆。", "alt");
   register("#xl-docbench .publication-image img", "XL-DocBench 流程：文档树、分支依赖问题合成、质量过滤与专家核验。", "alt");
-  register("#triooo [data-lightbox]", "TriOoO：架构与三级乱序调度（图 5）", "data-caption");
-  register("#wavecc [data-lightbox]", "WaveCC：信用引导的注入控制与路由器接口（图 7）", "data-caption");
+  register("#triooo [data-lightbox]", "TriOoO：架构与三级乱序调度", "data-caption");
+  register("#wavecc [data-lightbox]", "WaveCC：信用引导的注入控制与路由器接口", "data-caption");
   register("#triooo [data-lightbox]", "放大 TriOoO 架构图", "aria-label");
   register("#wavecc [data-lightbox]", "放大 WaveCC 总览图", "aria-label");
   register("#triooo .publication-image img", "TriOoO 架构：三级乱序调度、可复用计算模块与共享片上查找表。", "alt");
