@@ -87,7 +87,8 @@ test("pixel decorations are separated into the header and footer without interac
   assert.equal(dog.querySelector(".dog-greeting .dog-playful").getAttribute("src"), "assets/images/pixel-dog-wave.png");
   assert.equal(document.querySelectorAll("img[src$='pixel-cat-walk.png']").length, 1);
   assert.ok(cat.querySelector(".cat-walker .cat-facing img"));
-  assert.equal(cat.querySelector(".cat-walker > .cat-front").getAttribute("src"), "assets/images/pixel-cat-front.png");
+  assert.equal(cat.querySelector(".cat-walker > .cat-front .cat-groom-image").getAttribute("src"), "assets/images/pixel-cat-groom.png");
+  assert.equal(cat.querySelector(".cat-groom-image").getAttribute("width"), "576");
   assert.equal(cat.querySelector(".cat-facing .cat-front"), null);
 });
 

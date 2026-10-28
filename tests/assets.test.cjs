@@ -34,7 +34,7 @@ test("front-facing cat and dog hover expressions are valid distinct transparent 
 });
 
 test("walking and front-facing cats share orange tabby fur and white markings", async () => {
-  for (const name of ["cat-walk", "cat-front"]) {
+  for (const name of ["cat-walk", "cat-front", "cat-groom"]) {
     const pixels = await sharp(resolve(__dirname, `../assets/images/pixel-${name}.png`)).ensureAlpha().raw().toBuffer();
     const colors = new Set();
     for (let offset = 0; offset < pixels.length; offset += 4) {
@@ -45,6 +45,47 @@ test("walking and front-facing cats share orange tabby fur and white markings", 
     assert.ok(colors.has("255,247,229"), `${name}: white markings`);
     assert.ok(!colors.has("166,181,201"), `${name}: no old gray-blue fur`);
   }
+});
+
+test("cat grooming lowers its head toward a stationary paw without an extended tongue", async () => {
+  const image = readFileSync(resolve(__dirname, "../assets/images/pixel-cat-groom.png"));
+  const metadata = await sharp(image).metadata();
+  assert.equal(metadata.width, 576);
+  assert.equal(metadata.height, 96);
+  assert.equal(metadata.hasAlpha, true);
+  const frameHashes = new Set();
+  const headHashes = new Set();
+  const bodyHashes = new Set();
+  const pawHashes = new Set();
+  const headTopRows = [];
+  const tonguePixels = [];
+  for (let frame = 0; frame < 6; frame++) {
+    const pixels = await sharp(image).extract({ left: frame * 96, top: 0, width: 96, height: 96 }).ensureAlpha().raw().toBuffer();
+    assert.ok(pixels.some((value, index) => index % 4 === 3 && value > 0));
+    frameHashes.add(createHash("sha256").update(pixels).digest("hex"));
+    const head = await sharp(image).extract({ left: frame * 96, top: 0, width: 96, height: 33 }).ensureAlpha().raw().toBuffer();
+    headHashes.add(createHash("sha256").update(head).digest("hex"));
+    const body = await sharp(image).extract({ left: frame * 96, top: 75, width: 96, height: 21 }).ensureAlpha().raw().toBuffer();
+    bodyHashes.add(createHash("sha256").update(body).digest("hex"));
+    const paw = await sharp(image).extract({ left: frame * 96 + 57, top: 57, width: 9, height: 9 }).ensureAlpha().raw().toBuffer();
+    pawHashes.add(createHash("sha256").update(paw).digest("hex"));
+    const firstOpaque = head.findIndex((value, index) => index % 4 === 3 && value > 0);
+    headTopRows.push(Math.floor(firstOpaque / 4 / 96));
+    let pinkCount = 0;
+    for (let offset = 0; offset < pixels.length; offset += 4) {
+      if (pixels[offset + 3] === 255 && (
+        (pixels[offset] === 242 && pixels[offset + 1] === 117 && pixels[offset + 2] === 148) ||
+        (pixels[offset] === 255 && pixels[offset + 1] === 173 && pixels[offset + 2] === 189)
+      )) pinkCount++;
+    }
+    tonguePixels.push(pinkCount);
+  }
+  assert.equal(frameHashes.size, 6);
+  assert.equal(headHashes.size, 6);
+  assert.equal(bodyHashes.size, 1);
+  assert.equal(pawHashes.size, 1);
+  assert.deepEqual(headTopRows, [12, 15, 18, 21, 18, 15]);
+  assert.deepEqual(tonguePixels, [0, 0, 0, 0, 0, 0]);
 });
 
 test("dog greeting has four distinct raised-paw frames with a stationary resting paw", async () => {

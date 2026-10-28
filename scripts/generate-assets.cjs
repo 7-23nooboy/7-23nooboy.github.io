@@ -148,7 +148,27 @@ async function generateWalkingCat() {
     "....####", "..##cccc##", ".#ccwwwccc#", "#cccwwwwccs#", "#cccwwwwcss#",
     "#cccwwwwcss#", ".#ccwwwwcs#", "..#cwwwwc#", "..#ww##ww#", "..#ww##ww#", "..########"
   ];
-  await generateSprite("cat-front", composePixels(32, 32, [[4, 18, tail], [10, 17, frontBody], [9, 4, frontHead]]), catPalette);
+  const frontLayers = [[4, 18, tail], [10, 17, frontBody], [9, 4, frontHead]];
+  await generateSprite("cat-front", composePixels(32, 32, frontLayers), catPalette);
+  const groomingPaw = [".###.", "#www#", "#wpw#", "#www#", ".#c#."];
+  const groomingArm = ["..#c#", "..#cs#", ".#ccs#", ".#ccs#", "..###"];
+  const groomingPoses = [
+    { headLeft: 9, headTop: 4, blink: false },
+    { headLeft: 10, headTop: 5, blink: false },
+    { headLeft: 11, headTop: 6, blink: true },
+    { headLeft: 11, headTop: 7, blink: true },
+    { headLeft: 10, headTop: 6, blink: true },
+    { headLeft: 9, headTop: 5, blink: false }
+  ];
+  const groomingFrames = groomingPoses.map(({ headLeft, headTop, blink }) => composePixels(32, 32, [
+    [4, 18, tail],
+    [10, 17, frontBody],
+    [headLeft, headTop, frontHead],
+    ...(blink ? [[headLeft + 3, headTop + 7, ["ll", "kk", "ll"]], [headLeft + 8, headTop + 7, ["ll", "kk", "ll"]]] : []),
+    [18, 20, groomingArm],
+    [18, 18, groomingPaw]
+  ]));
+  await generateSprite("cat-groom", Array.from({ length: 32 }, (_, row) => groomingFrames.map((frame) => frame[row]).join("")), catPalette);
 }
 
 async function generatePeekingDog() {
