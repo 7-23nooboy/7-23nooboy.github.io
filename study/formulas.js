@@ -93,7 +93,7 @@ $$D_* =\left(\frac{\beta B}{\alpha A}\right)^{1/(\alpha+\beta)}\left(\frac C6\ri
     },
     {
       id: "compute", title: "6ND、attention与训练时间怎么推", category: "算力与优化", note: "compute-13", question: "Q34",
-      symbols: [["$L,S,h_q,d_h$", "层数、序列长度、查询头数、每头宽度"], ["$G,P$", "GPU数量、同精度单卡dense峰值FLOP/s"], ["$m,a$", "训练窗口MFU、额外运行可用率"], ["$D$", "与MFU分子口径一致的token量"]],
+      symbols: [["$N$", "dense模型中按矩阵运算口径统计的参数量"], ["$L,S,h_q,d_h$", "层数、序列长度、查询头数、每头宽度"], ["$G,P$", "GPU数量、同精度单卡dense峰值FLOP/s"], ["$m,a$", "训练窗口MFU、额外运行可用率"], ["$D$", "与MFU分子口径一致的token量"]],
       body: String.raw`### 1. 每个参数为何约6次运算
 矩阵线性层前向每个参数每token约一次乘法加一次加法，计2 FLOPs；输入梯度和权重梯度各约2，合计约6，所以主项为$6ND$。
 ### 2. 补上参数主项未覆盖的注意力

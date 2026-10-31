@@ -101,7 +101,8 @@ h3 { font-size: 16px; }
 .prose .katex { font-size: 1.03em; }
 .prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: 12px 3px; margin-block: .9em; max-width: 100%; }
 .prose section { min-width: 0; max-width: 100%; }
-.prose eq, .prose eqn { display: block; max-width: 100%; }
+.prose eq { display: inline-block; max-width: 100%; vertical-align: middle; overflow-x: auto; overflow-y: hidden; }
+.prose eqn { display: block; max-width: 100%; }
 .note-footer { display: flex; justify-content: space-between; gap: 15px; align-items: center; border-top: 1px solid var(--line); margin-top: 35px; padding-top: 18px; }
 .read-check { display: inline-flex; align-items: center; gap: 9px; color: var(--green); cursor: pointer; font-size: 13px; min-height: 44px; }
 .read-check input { accent-color: var(--green); min-height: auto; width: 17px; height: 17px; }

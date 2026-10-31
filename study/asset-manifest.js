@@ -1,4 +1,4 @@
-self.STUDY_ASSET_VERSION = "2c5114a534a5b05c";
+self.STUDY_ASSET_VERSION = "85e7c44871b82a8e";
 self.STUDY_ASSETS = [
   "../assets/fonts/bricolage-grotesque.ttf",
   "../assets/fonts/dm-sans.ttf",
