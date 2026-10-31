@@ -101,6 +101,18 @@ node scripts/generate-assets.cjs
 
 网站运行不依赖 npm 包或外部 CDN；开发依赖仅用于测试和素材生成。
 
+## 研究笔记阅读器
+
+主页导航的 Notes / 研究笔记链接到 [study/index.html](study/index.html)。阅读器包含63个公开知识章节、48道主问题及96组深入答案、12个公式推导专题、22项精选文献和49篇论文的官方入口。公式视图说明符号、推导、代入和适用边界，不提供交互计算器。
+
+手机支持全文搜索、分层展开答案、自测、收藏、掌握状态和字号调整。进度仅保存在本浏览器，可导入导出JSON；没有账户、进度上传或分析服务。论文跳转官方来源，不在站点托管PDF。
+
+阅读器使用本地化Markdown-it、KaTeX、DOMPurify及Lucide；许可证随静态资源保留。Service Worker仅缓存公开阅读器资源，限定在`/study/`，不下载外部论文、不拦截其他主页路径；访问并缓存成功后可离线读已发布版本。更新按整套缓存版本生效，关闭旧标签后再打开可获取新版本。
+
+发布数据是明确选择并清理后的公开知识集合，不自动读取任意本地文件夹。私人材料及其专属衍生输出不在本仓库。所有新增数据需进行内容复核，不能以隐藏链接、前端密码或Git忽略规则替代发布前检查。
+
+修改阅读器后执行`node scripts/prepare-study.cjs`更新渲染资源与离线版本，再执行`npm test`。已有公开数据位于[study/data.js](study/data.js)，公式专题位于[study/formulas.js](study/formulas.js)；请保留技术结论的适用条件和来源疑点，不把阅读状态当作正确性认证。
+
 ## 素材来源
 
 - XYZ AI Lab 标识取自[官方站点](https://xyz-lab.ai/)的[透明背景深色字标](https://xyz-lab.ai/assets/logo-sources/derivatives/logo-derived-014-transparent-bg-black-text-xyz-ai-lab-wordmark.svg)，于 2026-10-27 原样下载至 `assets/images/xyz-ai-lab.svg`，仅用于标明实习机构，不表示官方背书。

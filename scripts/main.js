@@ -326,7 +326,7 @@
   document.addEventListener("languagechange", updateLanguage);
   updateLanguage();
 
-  const navLinks = [...navigation.querySelectorAll(".nav-link")];
+  const navLinks = [...navigation.querySelectorAll('.nav-link[href^="#"]')];
   if ("IntersectionObserver" in globalThis) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {

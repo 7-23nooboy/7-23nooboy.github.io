@@ -5,3 +5,6 @@ screenshots/
 .work/
 /assets/images/portrait.jpg
 .DS_Store
+/study/**/*.pdf
+/study/**/*.zip
+/study/private/

@@ -431,3 +431,17 @@ test("invalid and duplicate email entries are excluded and labels are text-safe"
   assert.equal(document.querySelector("#email-panel .email-label").textContent, "<img src=x>");
   assert.equal(document.querySelector("#email-panel .email-label img"), null);
 });
+
+test("study entry links to the public reader in both languages without becoming a section observer", context => {
+  const browser = createPage(context, {}, window => {
+    window.IntersectionObserver = class {
+      observe(target) { assert.ok(target?.id); }
+    };
+  });
+  const link = browser.document.querySelector(".study-link");
+  assert.equal(link.getAttribute("href"), "study/");
+  assert.equal(link.textContent, "Notes");
+  browser.document.querySelector('[data-language="zh"]').click();
+  assert.equal(link.textContent, "研究笔记");
+  assert.ok(existsSync(resolve(root, "study/index.html")));
+});

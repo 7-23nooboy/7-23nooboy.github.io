@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="预训练数据学习笔记：数据理论、训练实践、研究问答与公开文献。">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'">
+  <link rel="canonical" href="https://7-23nooboy.github.io/study/">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="study.css">
+  <script src="../assets/vendor/lucide.min.js" defer></script>
+  <script src="vendor/markdown-it.min.js" defer></script>
+  <script src="vendor/katex/katex.min.js" defer></script>
+  <script src="vendor/texmath.js" defer></script>
+  <script src="vendor/purify.min.js" defer></script>
+  <script src="data.js" defer></script>
+  <script src="formulas.js" defer></script>
+  <script src="core.js" defer></script>
+  <script src="render.js" defer></script>
+  <script src="app.js" defer></script>
+  <title>预训练数据学习笔记 | 汪元喆</title>
+</head>
+<body>
+  <a class="skip-link" href="#reader">跳转到正文</a>
+  <header class="app-header">
+    <div class="topbar">
+      <a class="home-link" href="../" title="返回个人主页"><img src="../assets/images/portrait.webp" width="28" height="28" alt=""><span>汪元喆</span></a>
+      <span class="header-divider" aria-hidden="true">/</span><a class="app-name" href="#/notes/data-01">研究笔记</a>
+      <div class="header-actions">
+        <span class="connection-state" id="connection-state" hidden></span>
+        <button class="search-trigger" id="open-search" type="button" aria-label="搜索全部笔记、问题和文献"><i data-lucide="search" aria-hidden="true"></i><span>搜索</span></button>
+        <button class="icon-button" id="open-settings" type="button" title="阅读设置与本机进度" aria-label="阅读设置与本机进度"><i data-lucide="settings-2" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <div class="viewbar">
+      <nav class="view-tabs" aria-label="学习视图">
+        <a href="#/notes" data-view-link="notes"><i data-lucide="book-open" aria-hidden="true"></i><span>讲义</span></a>
+        <a href="#/questions" data-view-link="questions"><i data-lucide="messages-square" aria-hidden="true"></i><span>问答</span></a>
+        <a href="#/papers" data-view-link="papers"><i data-lucide="library" aria-hidden="true"></i><span>文献</span></a>
+        <a href="#/formulas/compute" data-view-link="formulas"><i data-lucide="sigma" aria-hidden="true"></i><span>公式</span></a>
+        <a href="#/saved" data-view-link="saved"><i data-lucide="bookmark" aria-hidden="true"></i><span>收藏</span></a>
+      </nav>
+      <div class="study-progress"><span id="mastered-count">0 / 48</span><span class="progress-track" aria-hidden="true"><span id="mastered-bar"></span></span></div>
+    </div>
+  </header>
+  <main class="workspace">
+    <aside class="sidebar" aria-label="当前视图目录">
+      <div class="catalog-heading"><h2 id="catalog-title">目录</h2><span id="catalog-count"></span></div>
+      <label class="select-label" for="catalog-filter">分类</label>
+      <select id="catalog-filter" aria-label="筛选目录分类"></select>
+      <div id="catalog-list" class="catalog-list"></div>
+      <div class="sidebar-bottom"><span>公开文献笔记</span><time datetime="2026-10-31">2026.10.31</time></div>
+    </aside>
+    <div class="reading-pane">
+      <div class="mobile-context"><button id="open-catalog" class="text-button" type="button"><i data-lucide="list" aria-hidden="true"></i><span id="mobile-catalog-label">目录</span></button><span id="mobile-position"></span></div>
+      <div id="reader" tabindex="-1"><article class="loading-state"><h1>预训练数据</h1><p role="status">正在载入笔记…</p></article></div>
+      <noscript><p class="notice">此阅读页需要 JavaScript。<a href="../">返回主页</a></p></noscript>
+    </div>
+  </main>
+  <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title">
+    <div class="dialog-heading"><h2 id="search-title">搜索</h2><button class="icon-button" type="button" data-close="search-dialog" aria-label="关闭搜索" title="关闭搜索"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="search-input-wrap"><i data-lucide="search" aria-hidden="true"></i><input id="search-input" type="search" placeholder="概念、问题或论文" autocomplete="off" aria-label="搜索全部内容"><button id="clear-search" class="icon-button" type="button" aria-label="清空搜索" title="清空搜索"><i data-lucide="delete" aria-hidden="true"></i></button></div>
+    <p id="search-status" class="muted" role="status"></p><div id="search-results" class="search-results"></div>
+  </dialog>
+  <dialog id="catalog-dialog" class="catalog-dialog" aria-labelledby="mobile-title">
+    <div class="dialog-heading"><h2 id="mobile-title">目录</h2><button class="icon-button" type="button" data-close="catalog-dialog" aria-label="关闭目录" title="关闭目录"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <select id="mobile-filter" aria-label="筛选目录分类"></select><div id="mobile-catalog" class="catalog-list"></div>
+  </dialog>
+  <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+    <div class="dialog-heading"><h2 id="settings-title">阅读设置</h2><button class="icon-button" type="button" data-close="settings-dialog" aria-label="关闭设置" title="关闭设置"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="setting-row"><span>正文字号</span><div class="segmented" role="group" aria-label="正文字号"><button type="button" data-font="small">小</button><button type="button" data-font="medium">标准</button><button type="button" data-font="large">大</button></div></div>
+    <h3>本机进度</h3><p id="progress-summary" class="muted"></p>
+    <div class="settings-commands"><button id="export-progress" class="text-button" type="button"><i data-lucide="download" aria-hidden="true"></i>导出进度</button><button id="import-progress" class="text-button" type="button"><i data-lucide="upload" aria-hidden="true"></i>导入进度</button><input id="progress-file" type="file" accept="application/json,.json" hidden></div>
+    <button id="reset-progress" class="text-button danger" type="button"><i data-lucide="trash-2" aria-hidden="true"></i>清空本机进度</button>
+  </dialog>
+  <dialog id="reset-dialog" class="settings-dialog" aria-labelledby="reset-title"><h2 id="reset-title">清空本机进度？</h2><p>将移除本浏览器中的收藏、已读记录和掌握状态。</p><div class="dialog-commands"><button class="text-button" type="button" data-close="reset-dialog">取消</button><button id="confirm-reset" class="primary-button danger" type="button">确认清空</button></div></dialog>
+  <div id="app-status" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
