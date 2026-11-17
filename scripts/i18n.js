@@ -19,7 +19,6 @@
   register(".nav-link[href='#publications']", "研究成果");
   register(".nav-link[href='#experience']", "科研实习");
   register(".nav-link[href='#education']", "教育背景");
-  register(".study-link", "研究笔记");
   register(".nav-link[href='#projects']", "项目");
   register(".intro-eyebrow", "中国科学院计算技术研究所 · 硕士研究生");
   register(".intro-location", "中国 · 北京");
