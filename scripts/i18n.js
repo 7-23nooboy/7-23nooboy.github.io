@@ -31,12 +31,12 @@
   register(".intro-lead", "关于我");
   register(".bio p:nth-child(2)", "我目前是<a href='https://www.ict.ac.cn/' target='_blank' rel='noopener noreferrer'>中国科学院计算技术研究所</a>的硕士研究生，就读于中国科学院大学，师从高性能中心的<strong>元国军高级工程师</strong>。此前，我于<a href='https://www.ustc.edu.cn/' target='_blank' rel='noopener noreferrer'>中国科学技术大学</a>获得信息安全专业工学学士学位。", "html");
   register(".bio p:nth-child(3)", "在计算所，我参与<strong>面向分子动力学模拟的 AI4S 计算加速芯片研发</strong>，负责验证工作，并参与部分设计。在此前的科研实习中，我的研究与实践涉及大语言模型智能体框架的设计、搭建与训练，智能体能力评测数据集的构建，以及预训练数据处理与算法研究。", "html");
-  register(".bio p:nth-child(4)", "目前，我的研究兴趣主要集中在<strong>大语言模型训练中的数据科学</strong>，包括数据配比、数据质量、数据利用与训练效率，以及同一数据在多轮训练中的效果。此外，我也关注<strong>后训练算法</strong>与<strong>面向长程智能体后训练的数据构建</strong>。", "html");
+  register(".bio p:nth-child(4)", "目前，我的研究兴趣主要包括<strong>模型评测</strong>、<strong>面向后训练的长程 Agentic 数据合成</strong>和<strong>预训练数据科学</strong>。", "html");
   register(".research-note", "研究兴趣", "aria-label");
   register(".research-note .eyebrow", "当前研究兴趣");
-  register(".research-note li:nth-child(1)", "大语言模型训练中的数据科学");
-  register(".research-note li:nth-child(2)", "后训练算法");
-  register(".research-note li:nth-child(3)", "长程智能体数据构建");
+  register(".research-note li:nth-child(1)", "模型评测");
+  register(".research-note li:nth-child(2)", "面向后训练的长程 Agentic 数据合成");
+  register(".research-note li:nth-child(3)", "预训练数据科学");
   register(".social-links", "个人链接", "aria-label");
   register(".email-trigger", "邮箱");
   register(".email-panel", "邮箱地址", "aria-label");
@@ -127,8 +127,8 @@
   register("#wavecc [data-lightbox]", "放大 WaveCC 总览图", "aria-label");
   register("#triooo .publication-image img", "TriOoO 架构：三级乱序调度、可复用计算模块与共享片上查找表。", "alt");
   register("#wavecc .publication-image img", "WaveCC 总览：信用采样引擎、步长计算、注入速率控制及处理单元与路由器接口。", "alt");
-  register("meta[name=description]", "汪元喆，中国科学院计算技术研究所硕士研究生，就读于中国科学院大学，关注大语言模型训练中的数据科学、后训练算法及长程智能体数据构建。", "content");
-  register("meta[property='og:description']", "汪元喆的学术主页：大语言模型训练中的数据科学、后训练算法与长程智能体。中国科学院计算技术研究所硕士研究生。", "content");
+  register("meta[name=description]", "汪元喆，中国科学院计算技术研究所硕士研究生，就读于中国科学院大学，关注模型评测、面向后训练的长程 Agentic 数据合成与预训练数据科学。", "content");
+  register("meta[property='og:description']", "汪元喆的学术主页：模型评测、面向后训练的长程 Agentic 数据合成与预训练数据科学。中国科学院计算技术研究所硕士研究生。", "content");
 
   const messages = {
     en: { pageTitle: "Yuanzhe Wang | Personal Homepage", openMenu: "Open navigation", closeMenu: "Close navigation", copyEmail: "Copy {email}", copied: "Email copied!", copyFailed: "Could not copy. You can select the address instead.", results: "Showing {count} publications.", viewProject: "View project" },

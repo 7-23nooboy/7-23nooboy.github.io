@@ -123,19 +123,19 @@ test("biography preserves the advisor, contribution scope, and current interests
     assert.equal(document.querySelectorAll(".bio p").length, 4);
     assert.match(biography, /AI4S/);
     if (language === "zh") {
-      for (const phrase of ["元国军高级工程师", "高性能中心", "信息安全", "负责验证工作", "参与部分设计", "评测数据集", "预训练数据处理", "大语言模型训练中的数据科学", "数据配比", "数据质量", "数据利用", "训练效率", "同一数据在多轮训练中的效果", "后训练算法", "长程智能体"]) {
+      for (const phrase of ["元国军高级工程师", "高性能中心", "信息安全", "负责验证工作", "参与部分设计", "评测数据集", "预训练数据处理", "模型评测", "面向后训练的长程 Agentic 数据合成", "预训练数据科学"]) {
         assert.ok(biography.includes(phrase), phrase);
       }
       assert.match(document.querySelector(".research-note").textContent, /当前研究兴趣/);
-      assert.match(document.querySelector(".research-note li").textContent, /大语言模型训练中的数据科学/);
-      assert.match(document.querySelector("meta[name=description]").content, /大语言模型训练中的数据科学/);
+      assert.match(document.querySelector(".research-note li").textContent, /模型评测/);
+      assert.match(document.querySelector("meta[name=description]").content, /模型评测/);
     } else {
-      for (const phrase of ["Guojun Yuan", "senior engineer", "High-Performance Computing Center", "Information Security", "verification", "parts of the design", "evaluating agent capabilities", "pretraining data processing", "data science for LLM training", "data mixtures", "data quality", "data utilization", "training efficiency", "same data over multiple epochs", "post-training algorithms", "long-horizon agents"]) {
+      for (const phrase of ["Guojun Yuan", "senior engineer", "High-Performance Computing Center", "Information Security", "verification", "parts of the design", "evaluating agent capabilities", "pretraining data processing", "model evaluation", "long-horizon agentic data synthesis for post-training", "pretraining data science"]) {
         assert.ok(biography.includes(phrase), phrase);
       }
       assert.match(document.querySelector(".research-note").textContent, /Current research interests/);
-      assert.match(document.querySelector(".research-note li").textContent, /Data science for LLM training/);
-      assert.match(document.querySelector("meta[name=description]").content, /data science for LLM training/);
+      assert.match(document.querySelector(".research-note li").textContent, /Model evaluation/);
+      assert.match(document.querySelector("meta[name=description]").content, /model evaluation/);
     }
   }
 });
